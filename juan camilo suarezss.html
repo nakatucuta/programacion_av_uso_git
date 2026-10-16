@@ -1,0 +1,981 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ruta Git y GitHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#F5F7FB;
+  --surface:#FFFFFF;
+  --surface-2:#EDF1F8;
+  --ink:#141B2D;
+  --ink-2:#4A5570;
+  --line:#D7DDEA;
+  --accent:#3A48C8;
+  --accent-soft:#E3E6FB;
+  --branch:#0C8C63;
+  --branch-soft:#DDF3EA;
+  --warn:#B45309;
+  --warn-soft:#FDF0DC;
+  --danger:#C0322B;
+  --danger-soft:#FBE3E1;
+  --term-bg:#171C2C;
+  --term-ink:#E6E9F5;
+  --term-dim:#8A93B2;
+  --term-green:#5FD3A2;
+  --term-blue:#9AA6FF;
+  --shadow:0 1px 2px rgba(20,27,45,.06),0 6px 20px rgba(20,27,45,.06);
+  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,"Segoe UI",sans-serif;
+  --f-body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"Cascadia Code",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F1320;
+    --surface:#161B2B;
+    --surface-2:#1D2336;
+    --ink:#E8EBF5;
+    --ink-2:#A3ACC6;
+    --line:#2A3148;
+    --accent:#8E99FF;
+    --accent-soft:#232A52;
+    --branch:#4FCB9A;
+    --branch-soft:#15332A;
+    --warn:#F2B25C;
+    --warn-soft:#3A2A12;
+    --danger:#F08A83;
+    --danger-soft:#3B1C1B;
+    --term-bg:#0A0D17;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F1320;
+  --surface:#161B2B;
+  --surface-2:#1D2336;
+  --ink:#E8EBF5;
+  --ink-2:#A3ACC6;
+  --line:#2A3148;
+  --accent:#8E99FF;
+  --accent-soft:#232A52;
+  --branch:#4FCB9A;
+  --branch-soft:#15332A;
+  --warn:#F2B25C;
+  --warn-soft:#3A2A12;
+  --danger:#F08A83;
+  --danger-soft:#3B1C1B;
+  --term-bg:#0A0D17;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--f-body);font-size:17px;line-height:1.65;
+  padding-inline:20px;
+}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+p{margin:0}
+code{font-family:var(--f-mono);font-size:.86em}
+:not(pre)>code{background:var(--surface-2);border:1px solid var(--line);padding:.08em .38em;border-radius:5px;white-space:nowrap}
+kbd{font-family:var(--f-mono);font-size:.8em;background:var(--surface);border:1px solid var(--line);border-bottom-width:3px;border-radius:6px;padding:.05em .45em;white-space:nowrap}
+
+/* ---------- Encabezado ---------- */
+.hero{max-width:1180px;margin:0 auto;padding-block:56px 40px;display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:center}
+.eyebrow{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--branch);font-weight:600}
+.hero h1{font-size:clamp(38px,6vw,68px);font-weight:800;letter-spacing:-.02em;margin-top:12px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lead{font-size:19px;color:var(--ink-2);margin-top:18px;max-width:34em}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.chip{font-size:14px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;color:var(--ink-2)}
+.hero-term{background:var(--term-bg);color:var(--term-ink);border-radius:14px;padding:18px 20px;font-family:var(--f-mono);font-size:14px;line-height:1.8;box-shadow:var(--shadow);overflow-x:auto}
+.hero-term .dots{display:flex;gap:6px;margin-bottom:10px}
+.hero-term .dots i{width:10px;height:10px;border-radius:50%;background:#3A4260;display:block}
+.hero-term .p{color:var(--term-green)}
+.hero-term .o{color:var(--term-dim)}
+.hero-term .h{color:var(--term-blue)}
+
+/* ---------- Estructura ---------- */
+.layout{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:260px minmax(0,1fr);gap:48px;padding-block:8px 80px}
+aside.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;max-height:calc(100vh - 40px);overflow:auto;padding-right:4px}
+.progress{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px}
+.progress-top{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:var(--ink-2)}
+.progress-top strong{font-family:var(--f-display);font-size:22px;color:var(--ink);font-variant-numeric:tabular-nums}
+.bar{height:8px;background:var(--surface-2);border-radius:99px;margin-top:10px;overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:var(--branch);border-radius:99px;transition:width .4s ease}
+.toc-title{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin:0 0 8px}
+.toc ol{list-style:none;margin:0;padding:0;position:relative}
+.toc ol::before{content:"";position:absolute;left:9px;top:10px;bottom:10px;width:2px;background:var(--line)}
+.toc li a{display:flex;align-items:center;gap:12px;padding:5px 6px;text-decoration:none;color:var(--ink-2);font-size:15px;border-radius:8px;position:relative}
+.toc li a:hover{background:var(--surface-2);color:var(--ink)}
+.toc li a::before{content:"";flex:none;width:12px;height:12px;border-radius:50%;background:var(--ground);border:2px solid var(--line);margin-left:-3px;position:relative;z-index:1}
+.toc li a.done::before{background:var(--branch);border-color:var(--branch)}
+.toc li a.active{color:var(--ink);font-weight:700}
+.toc li a.active::before{border-color:var(--accent)}
+.toc-mobile{display:none}
+
+main{min-width:0}
+
+/* ---------- Pasos (commits en una rama) ---------- */
+.step{position:relative;padding-left:56px;padding-bottom:56px}
+.step::before{content:"";position:absolute;left:15px;top:36px;bottom:0;width:2px;background:var(--line)}
+.step:last-of-type::before{display:none}
+.node{position:absolute;left:0;top:2px;width:32px;height:32px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);display:grid;place-items:center;font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--accent)}
+.step.is-done .node{background:var(--branch);border-color:var(--branch);color:#fff}
+.step-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px}
+.hash{font-family:var(--f-mono);font-size:12.5px;color:var(--ink-2)}
+.step h2{font-size:clamp(26px,3.2vw,34px);font-weight:700;letter-spacing:-.01em;margin-top:4px;scroll-margin-top:24px}
+.step .intro{font-size:18px;color:var(--ink-2);margin-top:10px;max-width:40em}
+.body{display:flex;flex-direction:column;gap:18px;margin-top:22px;max-width:760px}
+.body > p, .body > ul, .body > ol{max-width:44em}
+.body ul,.body ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+h3{font-size:20px;font-weight:700;margin-top:10px}
+
+.done-toggle{display:inline-flex;align-items:center;gap:10px;margin-top:22px;cursor:pointer;font-size:15px;color:var(--ink-2);user-select:none;border:1px dashed var(--line);border-radius:10px;padding:8px 14px;background:transparent}
+.done-toggle input{width:18px;height:18px;accent-color:var(--branch);margin:0}
+.step.is-done .done-toggle{border-style:solid;border-color:var(--branch);color:var(--branch);background:var(--branch-soft)}
+
+/* Instrucciones numeradas (sub-pasos) */
+.sub{list-style:none;padding:0!important;counter-reset:s;gap:12px!important}
+.sub > li{counter-increment:s;display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start}
+.sub > li::before{content:counter(s);width:26px;height:26px;border-radius:8px;background:var(--accent-soft);color:var(--accent);font-family:var(--f-mono);font-size:13px;font-weight:600;display:grid;place-items:center;margin-top:1px}
+
+/* Código */
+.code{position:relative;background:var(--term-bg);border-radius:12px;overflow:hidden}
+.code-bar{display:flex;justify-content:space-between;align-items:center;padding:8px 10px 8px 16px;border-bottom:1px solid rgba(255,255,255,.07);font-family:var(--f-mono);font-size:12px;color:var(--term-dim)}
+.copy{font-family:var(--f-mono);font-size:12px;background:rgba(255,255,255,.07);color:var(--term-ink);border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:4px 10px;cursor:pointer}
+.copy:hover{background:rgba(255,255,255,.14)}
+.code pre{margin:0;padding:14px 16px 16px;overflow-x:auto;color:var(--term-ink);font-family:var(--f-mono);font-size:14px;line-height:1.75}
+.code .c{color:var(--term-dim)}
+.code .k{color:var(--term-green)}
+.code .s{color:var(--term-blue)}
+
+/* Avisos */
+.note{border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:16px;border:1px solid transparent}
+.note b.tag{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;padding-top:3px}
+.note.tip{background:var(--branch-soft);border-color:color-mix(in srgb,var(--branch) 25%,transparent)}
+.note.tip b.tag{color:var(--branch)}
+.note.warn{background:var(--warn-soft);border-color:color-mix(in srgb,var(--warn) 25%,transparent)}
+.note.warn b.tag{color:var(--warn)}
+.note.info{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+.note.info b.tag{color:var(--accent)}
+
+/* Pestañas SO */
+.tabs{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.tablist{display:flex;gap:4px;padding:6px;background:var(--surface-2);border-bottom:1px solid var(--line);overflow-x:auto}
+.tablist button{font:inherit;font-size:15px;border:0;background:transparent;color:var(--ink-2);padding:7px 14px;border-radius:9px;cursor:pointer;white-space:nowrap}
+.tablist button[aria-selected="true"]{background:var(--surface);color:var(--ink);font-weight:700;box-shadow:var(--shadow)}
+.tabpanel{padding:18px;display:flex;flex-direction:column;gap:14px}
+
+/* Figuras */
+figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+figure .svgwrap{overflow-x:auto}
+figcaption{font-size:14px;color:var(--ink-2);margin-top:10px}
+svg text{font-family:var(--f-body)}
+
+/* Mapa de VS Code */
+.vsmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.vsmap div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.vsmap b{display:block;font-family:var(--f-display);font-size:17px}
+.vsmap span{font-size:15px;color:var(--ink-2)}
+
+/* Tablas */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+td code{white-space:nowrap}
+.group td{background:var(--surface-2);font-family:var(--f-display);font-weight:700;font-size:15px}
+
+/* Errores */
+details.err{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+details.err summary{cursor:pointer;padding:14px 16px;font-weight:700;list-style:none;display:flex;gap:12px;align-items:baseline}
+details.err summary::-webkit-details-marker{display:none}
+details.err summary::before{content:"+";font-family:var(--f-mono);color:var(--danger);font-weight:600;width:1ch}
+details.err[open] summary::before{content:"−"}
+details.err summary code{white-space:normal;color:var(--danger);background:var(--danger-soft);border-color:transparent}
+details.err .inner{padding:0 16px 16px 40px;display:flex;flex-direction:column;gap:12px}
+
+/* Glosario */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.gloss div{background:var(--surface);padding:14px 16px}
+.gloss dt{font-family:var(--f-mono);font-weight:600;color:var(--accent);font-size:14.5px}
+.gloss dd{margin:4px 0 0;font-size:15px;color:var(--ink-2)}
+
+/* Ejercicio */
+.mission{background:var(--surface);border:2px solid var(--accent);border-radius:16px;padding:22px}
+.mission h3{margin-top:0}
+.mission ol{margin-top:12px}
+
+footer{max-width:1180px;margin:0 auto;padding-block:28px 48px;border-top:1px solid var(--line);color:var(--ink-2);font-size:14px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+.reset{font:inherit;font-size:14px;background:none;border:1px solid var(--line);color:var(--ink-2);border-radius:8px;padding:5px 12px;cursor:pointer}
+
+@media (max-width: 960px){
+  .hero{grid-template-columns:1fr;padding-block:32px 24px;gap:24px}
+  .layout{grid-template-columns:1fr;gap:0}
+  aside.toc{display:none}
+  .toc-mobile{display:block;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ground);padding-block:10px;margin-bottom:24px;border-bottom:1px solid var(--line)}
+  .toc-mobile details{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+  .toc-mobile summary{padding:10px 14px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;font-weight:700;font-size:15px}
+  .toc-mobile .bar{margin:0 14px 12px}
+  .toc-mobile ol{padding:0 14px 12px;margin:0;list-style:none}
+  .toc-mobile li a{display:block;padding:6px 0;text-decoration:none;color:var(--ink-2);font-size:15px}
+  .toc-mobile li a.done{color:var(--branch)}
+}
+@media (max-width: 520px){
+  body{font-size:16px;padding-inline:16px}
+  .step{padding-left:44px}
+  .node{width:28px;height:28px;font-size:12px}
+  .step::before{left:13px;top:32px}
+  details.err .inner{padding-left:16px}
+}
+</style>
+
+<header class="hero">
+  <div>
+    <div class="eyebrow">Guía para estudiantes · desde cero</div>
+    <h1>De cero a tu primer <em>git push</em></h1>
+    <p class="lead">Instala Git, crea tu cuenta de GitHub, conéctala con Visual Studio Code y aprende los comandos que usarás todos los días: clonar, confirmar cambios (commit), subir, bajar y trabajar con ramas.</p>
+    <div class="hero-meta">
+      <span class="chip">15 pasos</span>
+      <span class="chip">Windows · macOS · Linux</span>
+      <span class="chip">Terminal + interfaz de VS Code</span>
+    </div>
+  </div>
+  <div class="hero-term" aria-label="Ejemplo de sesión en la terminal">
+    <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div><span class="p">$</span> git clone https://github.com/tu-usuario/mi-proyecto.git</div>
+    <div class="o">Cloning into 'mi-proyecto'... done.</div>
+    <div><span class="p">$</span> git add .</div>
+    <div><span class="p">$</span> git commit -m "Agrega página de inicio"</div>
+    <div class="o">[main <span class="h">a1b2c3d</span>] Agrega página de inicio</div>
+    <div><span class="p">$</span> git push</div>
+    <div class="o">To github.com:tu-usuario/mi-proyecto.git  main -&gt; main</div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="toc" aria-label="Índice">
+    <div class="progress">
+      <div class="progress-top"><span>Tu avance</span><strong><span class="js-count">0</span>/<span class="js-total">15</span></strong></div>
+      <div class="bar"><span class="js-bar"></span></div>
+    </div>
+    <p class="toc-title">Ruta</p>
+    <ol class="js-toc"></ol>
+  </aside>
+
+  <main>
+    <nav class="toc-mobile" aria-label="Índice">
+      <details>
+        <summary><span>Índice de la guía</span><span><span class="js-count">0</span>/<span class="js-total">15</span></span></summary>
+        <div class="bar"><span class="js-bar"></span></div>
+        <ol class="js-toc"></ol>
+      </details>
+    </nav>
+
+    <!-- 1 -->
+    <section class="step" id="conceptos" data-title="Qué son Git y GitHub">
+      <div class="node">1</div>
+      <div class="step-head"><span class="hash">Conceptos</span></div>
+      <h2>Qué son Git y GitHub (y por qué no son lo mismo)</h2>
+      <p class="intro">Antes de instalar nada, conviene tener claro el mapa mental. Cinco minutos aquí te ahorran horas de confusión después.</p>
+      <div class="body">
+        <p><strong>Git</strong> es un programa que se instala en tu computadora. Guarda el historial de cambios de una carpeta: cada vez que "confirmas" (haces un <em>commit</em>), Git toma una foto del proyecto que puedes recuperar después.</p>
+        <p><strong>GitHub</strong> es una página web (github.com) donde guardas una copia de ese historial en la nube, para respaldarlo, compartirlo y trabajar en equipo.</p>
+        <p><strong>Visual Studio Code</strong> es el editor de código donde escribes tu proyecto. Trae Git integrado, así que puedes hacer casi todo con botones o con su terminal.</p>
+
+        <figure>
+          <div class="svgwrap">
+          <svg viewBox="0 0 760 250" width="100%" style="min-width:600px" role="img" aria-label="Diagrama: carpeta de trabajo, área de preparación, repositorio local y GitHub, con los comandos add, commit, push y pull">
+            <defs>
+              <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--ink-2)"/></marker>
+              <marker id="arB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--branch)"/></marker>
+            </defs>
+            <rect x="10" y="40" width="160" height="110" rx="14" fill="var(--surface-2)" stroke="var(--line)"/>
+            <text x="90" y="80" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">Carpeta de</text>
+            <text x="90" y="100" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">trabajo</text>
+            <text x="90" y="126" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">tus archivos</text>
+
+            <rect x="205" y="40" width="160" height="110" rx="14" fill="var(--surface-2)" stroke="var(--line)"/>
+            <text x="285" y="80" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">Staging</text>
+            <text x="285" y="100" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">(área de preparación)</text>
+            <text x="285" y="126" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">lo que irá al commit</text>
+
+            <rect x="400" y="40" width="160" height="110" rx="14" fill="var(--accent-soft)" stroke="var(--accent)"/>
+            <text x="480" y="80" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">Repositorio</text>
+            <text x="480" y="100" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">local</text>
+            <text x="480" y="126" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">historial en tu PC</text>
+
+            <rect x="595" y="40" width="155" height="110" rx="14" fill="var(--branch-soft)" stroke="var(--branch)"/>
+            <text x="672" y="88" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">GitHub</text>
+            <text x="672" y="112" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">copia en la nube</text>
+
+            <line x1="172" y1="80" x2="201" y2="80" stroke="var(--ink-2)" stroke-width="2" marker-end="url(#ar)"/>
+            <text x="187" y="30" text-anchor="middle" font-size="13" font-family="JetBrains Mono, monospace" fill="var(--accent)">add</text>
+            <line x1="367" y1="80" x2="396" y2="80" stroke="var(--ink-2)" stroke-width="2" marker-end="url(#ar)"/>
+            <text x="382" y="30" text-anchor="middle" font-size="13" font-family="JetBrains Mono, monospace" fill="var(--accent)">commit</text>
+            <line x1="562" y1="80" x2="591" y2="80" stroke="var(--ink-2)" stroke-width="2" marker-end="url(#ar)"/>
+            <text x="577" y="30" text-anchor="middle" font-size="13" font-family="JetBrains Mono, monospace" fill="var(--accent)">push</text>
+
+            <path d="M672 152 C672 220 90 220 90 154" fill="none" stroke="var(--branch)" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arB)"/>
+            <text x="381" y="236" text-anchor="middle" font-size="13" font-family="JetBrains Mono, monospace" fill="var(--branch)">pull / clone  (traer cambios de GitHub)</text>
+          </svg>
+          </div>
+          <figcaption>El viaje de un cambio: lo editas, lo preparas con <code>add</code>, lo guardas en el historial con <code>commit</code> y lo subes con <code>push</code>. Para traer lo que hay en GitHub usas <code>pull</code> (o <code>clone</code> la primera vez).</figcaption>
+        </figure>
+
+        <div class="note info"><b class="tag">Idea clave</b><span>Un <strong>commit</strong> vive primero solo en tu computadora. Hasta que no haces <code>push</code>, GitHub no lo ve. Esto es lo que más confunde al principio.</span></div>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-conceptos"> Entendí los conceptos</label>
+    </section>
+
+    <!-- 2 -->
+    <section class="step" id="instalar-git" data-title="Instalar Git">
+      <div class="node">2</div>
+      <div class="step-head"><span class="hash">Instalación</span></div>
+      <h2>Instalar Git en tu computadora</h2>
+      <p class="intro">Elige tu sistema operativo. Si tienes dudas en alguna pantalla del instalador, deja la opción que viene marcada.</p>
+      <div class="body">
+        <div class="tabs" data-tabs>
+          <div class="tablist" role="tablist" aria-label="Sistema operativo">
+            <button role="tab" id="tab-win" aria-controls="p-win" aria-selected="true">Windows</button>
+            <button role="tab" id="tab-mac" aria-controls="p-mac" aria-selected="false" tabindex="-1">macOS</button>
+            <button role="tab" id="tab-lin" aria-controls="p-lin" aria-selected="false" tabindex="-1">Linux</button>
+          </div>
+          <div class="tabpanel" role="tabpanel" id="p-win" aria-labelledby="tab-win">
+            <ol class="sub">
+              <li><span>Entra a <a href="https://git-scm.com/downloads/win" target="_blank" rel="noopener">git-scm.com/downloads/win</a> y descarga el instalador de <strong>64 bits</strong>.</span></li>
+              <li><span>Ábrelo y avanza con <strong>Next</strong>. Presta atención solo a estas pantallas:</span></li>
+              <li><span><strong>Choosing the default editor</strong>: elige <em>"Use Visual Studio Code as Git's default editor"</em>.</span></li>
+              <li><span><strong>Adjusting the name of the initial branch</strong>: marca <em>"Override the default branch name"</em> y escribe <code>main</code>.</span></li>
+              <li><span><strong>Adjusting your PATH</strong>: deja <em>"Git from the command line and also from 3rd-party software"</em> (recomendado).</span></li>
+              <li><span><strong>Credential helper</strong>: deja <em>"Git Credential Manager"</em>. Es lo que abrirá el navegador para iniciar sesión en GitHub la primera vez.</span></li>
+              <li><span>Termina con <strong>Install</strong> y luego <strong>Finish</strong>.</span></li>
+            </ol>
+            <div class="note tip"><b class="tag">Extra</b><span>El instalador también trae <strong>Git Bash</strong>, una terminal tipo Linux. Puedes usarla, pero en esta guía usaremos la terminal integrada de VS Code.</span></div>
+          </div>
+          <div class="tabpanel" role="tabpanel" id="p-mac" aria-labelledby="tab-mac" hidden>
+            <p>Abre la app <strong>Terminal</strong> (búscala con <kbd>⌘</kbd> + <kbd>Espacio</kbd>) y usa una de estas dos opciones:</p>
+            <div class="code"><div class="code-bar"><span>Opción A · herramientas de Apple</span><button class="copy">Copiar</button></div><pre><code>xcode-select --install</code></pre></div>
+            <div class="code"><div class="code-bar"><span>Opción B · con Homebrew (si ya lo tienes)</span><button class="copy">Copiar</button></div><pre><code>brew install git</code></pre></div>
+          </div>
+          <div class="tabpanel" role="tabpanel" id="p-lin" aria-labelledby="tab-lin" hidden>
+            <p>Abre una terminal y ejecuta el comando de tu distribución:</p>
+            <div class="code"><div class="code-bar"><span>Ubuntu / Debian / Mint</span><button class="copy">Copiar</button></div><pre><code>sudo apt update
+sudo apt install git</code></pre></div>
+            <div class="code"><div class="code-bar"><span>Fedora</span><button class="copy">Copiar</button></div><pre><code>sudo dnf install git</code></pre></div>
+          </div>
+        </div>
+
+        <h3>Comprueba que quedó instalado</h3>
+        <p>Abre una terminal nueva (en Windows: busca "Git Bash" o "PowerShell") y escribe:</p>
+        <div class="code"><div class="code-bar"><span>terminal</span><button class="copy">Copiar</button></div><pre><code>git --version</code></pre></div>
+        <p>Si ves algo como <code>git version 2.51.0</code>, ¡listo! El número exacto puede ser otro; lo importante es que no diga "comando no encontrado".</p>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-instalar-git"> Git está instalado</label>
+    </section>
+
+    <!-- 3 -->
+    <section class="step" id="cuenta" data-title="Crear cuenta en GitHub">
+      <div class="node">3</div>
+      <div class="step-head"><span class="hash">Cuenta</span></div>
+      <h2>Crear tu cuenta en GitHub</h2>
+      <p class="intro">Tu perfil de GitHub será tu portafolio como programador. Elige un nombre de usuario que te dé gusto mostrar.</p>
+      <div class="body">
+        <ol class="sub">
+          <li><span>Ve a <a href="https://github.com/signup" target="_blank" rel="noopener">github.com/signup</a>.</span></li>
+          <li><span>Escribe tu <strong>correo</strong>, una <strong>contraseña</strong> segura y un <strong>nombre de usuario</strong> (por ejemplo <code>ana-torres-dev</code>). Evita apodos que no usarías en una entrevista de trabajo.</span></li>
+          <li><span>Resuelve la verificación y revisa tu correo: GitHub te enviará un <strong>código</strong> para confirmar la cuenta.</span></li>
+          <li><span>Activa la <strong>verificación en dos pasos (2FA)</strong> en <em>Settings → Password and authentication</em>. GitHub la exige para poder contribuir en código.</span></li>
+          <li><span>Opcional pero útil: agrega foto y una breve biografía en tu perfil.</span></li>
+        </ol>
+        <div class="note tip"><b class="tag">Estudiantes</b><span>Con tu correo institucional puedes solicitar el <a href="https://education.github.com/pack" target="_blank" rel="noopener">GitHub Student Developer Pack</a>, que incluye GitHub Copilot y otras herramientas gratis mientras estudias.</span></div>
+        <div class="note warn"><b class="tag">Anota esto</b><span>Recuerda el <strong>correo</strong> con el que te registraste: lo usarás en el paso 5 para configurar Git.</span></div>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-cuenta"> Ya tengo cuenta en GitHub</label>
+    </section>
+
+    <!-- 4 -->
+    <section class="step" id="vscode" data-title="Instalar VS Code">
+      <div class="node">4</div>
+      <div class="step-head"><span class="hash">Editor</span></div>
+      <h2>Instalar Visual Studio Code</h2>
+      <p class="intro">VS Code detecta Git automáticamente si ya lo instalaste en el paso 2.</p>
+      <div class="body">
+        <ol class="sub">
+          <li><span>Descárgalo desde <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">code.visualstudio.com</a>.</span></li>
+          <li><span>En Windows, durante la instalación marca estas casillas: <em>"Agregar la acción 'Abrir con Code' al menú contextual"</em> (para archivos y carpetas) y <em>"Agregar a PATH"</em>.</span></li>
+          <li><span>Abre VS Code. Si lo quieres en español: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd> → busca <strong>Spanish Language Pack</strong> → Instalar → reinicia.</span></li>
+        </ol>
+        <h3>Las partes de VS Code que usarás</h3>
+        <div class="vsmap">
+          <div><b>Explorador</b><span><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> · tus archivos y carpetas.</span></div>
+          <div><b>Control de código fuente</b><span><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd> · el panel de Git: cambios, commits, sincronizar.</span></div>
+          <div><b>Terminal integrada</b><span><kbd>Ctrl</kbd>+<kbd>ñ</kbd> o <kbd>Ctrl</kbd>+<kbd>`</kbd> · para escribir comandos.</span></div>
+          <div><b>Paleta de comandos</b><span><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> · busca cualquier acción, por ejemplo "Git: Clone".</span></div>
+        </div>
+        <p style="font-size:15px;color:var(--ink-2)">En macOS cambia <kbd>Ctrl</kbd> por <kbd>⌘</kbd>.</p>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-vscode"> VS Code está instalado</label>
+    </section>
+
+    <!-- 5 -->
+    <section class="step" id="configurar" data-title="Configurar tu identidad">
+      <div class="node">5</div>
+      <div class="step-head"><span class="hash">Configuración · una sola vez</span></div>
+      <h2>Decirle a Git quién eres</h2>
+      <p class="intro">Cada commit lleva tu nombre y correo. Configúralos una vez y Git los usará siempre en esta computadora.</p>
+      <div class="body">
+        <p>En VS Code abre la terminal (<kbd>Ctrl</kbd> + <kbd>ñ</kbd>) y escribe, cambiando los datos por los tuyos:</p>
+        <div class="code"><div class="code-bar"><span>terminal · configuración global</span><button class="copy">Copiar</button></div><pre><code>git config --global user.name <span class="s">"Ana Torres"</span>
+git config --global user.email <span class="s">"ana@correo.com"</span>
+git config --global init.defaultBranch main
+git config --global core.editor <span class="s">"code --wait"</span></code></pre></div>
+        <ul>
+          <li><code>user.name</code>: tu nombre como quieres que aparezca en los commits.</li>
+          <li><code>user.email</code>: <strong>el mismo correo de tu cuenta de GitHub</strong>, así tus commits se vinculan a tu perfil.</li>
+          <li><code>init.defaultBranch main</code>: los repositorios nuevos empiezan en la rama <code>main</code>, igual que en GitHub.</li>
+          <li><code>core.editor</code>: cuando Git necesite que escribas un texto largo, abrirá VS Code.</li>
+        </ul>
+        <p>Para revisar lo que configuraste:</p>
+        <div class="code"><div class="code-bar"><span>terminal</span><button class="copy">Copiar</button></div><pre><code>git config --global --list</code></pre></div>
+        <div class="note info"><b class="tag">¿Privacidad?</b><span>Si no quieres que tu correo sea público, en GitHub ve a <em>Settings → Emails</em>, activa <em>"Keep my email addresses private"</em> y usa el correo tipo <code>12345+usuario@users.noreply.github.com</code> que te muestra ahí.</span></div>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-configurar"> Configuré nombre y correo</label>
+    </section>
+
+    <!-- 6 -->
+    <section class="step" id="vincular" data-title="Vincular GitHub con VS Code">
+      <div class="node">6</div>
+      <div class="step-head"><span class="hash">Vinculación</span></div>
+      <h2>Vincular tu cuenta de GitHub con VS Code</h2>
+      <p class="intro">Así VS Code puede clonar tus repositorios, subir cambios y publicar proyectos nuevos sin pedirte la contraseña cada vez.</p>
+      <div class="body">
+        <h3>Opción recomendada: desde VS Code</h3>
+        <ol class="sub">
+          <li><span>Haz clic en el ícono de <strong>Cuentas</strong> (la silueta de persona abajo a la izquierda, en la barra lateral).</span></li>
+          <li><span>Elige <strong>"Iniciar sesión con GitHub…"</strong> (o <em>"Sign in with GitHub"</em>). Si no aparece, ve primero al panel de control de código fuente y elige <strong>Clonar repositorio → Clonar desde GitHub</strong>: VS Code te pedirá iniciar sesión.</span></li>
+          <li><span>Aparece un aviso: <em>"La extensión GitHub quiere iniciar sesión…"</em>. Pulsa <strong>Permitir</strong>.</span></li>
+          <li><span>Se abre el navegador. Inicia sesión en GitHub y pulsa <strong>Authorize Visual-Studio-Code</strong>.</span></li>
+          <li><span>El navegador pedirá volver a VS Code: acepta <strong>Abrir Visual Studio Code</strong>. Ya verás tu usuario en el menú de Cuentas.</span></li>
+        </ol>
+        <div class="note tip"><b class="tag">Al primer push</b><span>La primera vez que subas cambios, puede abrirse otra ventana de <strong>Git Credential Manager</strong> pidiendo iniciar sesión. Elige <strong>Sign in with your browser</strong> y autoriza. Solo pasa una vez.</span></div>
+
+        <details class="err">
+          <summary>Alternativa: iniciar sesión con GitHub CLI (<code>gh</code>)</summary>
+          <div class="inner">
+            <p>GitHub CLI es una herramienta oficial para la terminal. Instálala desde <a href="https://cli.github.com/" target="_blank" rel="noopener">cli.github.com</a> y luego:</p>
+            <div class="code"><div class="code-bar"><span>terminal</span><button class="copy">Copiar</button></div><pre><code>gh auth login</code></pre></div>
+            <p>Responde: <em>GitHub.com → HTTPS → Yes (authenticate Git) → Login with a web browser</em>. Copia el código de 8 caracteres que te muestra y pégalo en el navegador.</p>
+          </div>
+        </details>
+
+        <details class="err">
+          <summary>Alternativa avanzada: llaves SSH</summary>
+          <div class="inner">
+            <p>Útil si trabajas en laboratorios o servidores. Genera una llave (presiona <kbd>Enter</kbd> en todas las preguntas):</p>
+            <div class="code"><div class="code-bar"><span>terminal</span><button class="copy">Copiar</button></div><pre><code>ssh-keygen -t ed25519 -C <span class="s">"ana@correo.com"</span>
+cat ~/.ssh/id_ed25519.pub</code></pre></div>
+            <p>Copia el texto que empieza con <code>ssh-ed25519</code>, ve a GitHub → <em>Settings → SSH and GPG keys → New SSH key</em>, pégalo y guarda. Comprueba con:</p>
+            <div class="code"><div class="code-bar"><span>terminal</span><button class="copy">Copiar</button></div><pre><code>ssh -T git@github.com</code></pre></div>
+            <p>Con SSH, clona usando la URL que empieza con <code>git@github.com:</code> en vez de <code>https://</code>.</p>
+          </div>
+        </details>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-vincular"> VS Code muestra mi cuenta de GitHub</label>
+    </section>
+
+    <!-- 7 -->
+    <section class="step" id="clonar" data-title="Descargar (clonar) un repositorio">
+      <div class="node">7</div>
+      <div class="step-head"><span class="hash">git clone</span></div>
+      <h2>Descargar un repositorio (clonar)</h2>
+      <p class="intro">"Clonar" es descargar un proyecto de GitHub <strong>con todo su historial</strong>, ya conectado para poder subir y bajar cambios. Es distinto a descargar un ZIP.</p>
+      <div class="body">
+        <h3>Primero, copia la URL del repositorio</h3>
+        <p>En la página del repositorio en GitHub, pulsa el botón verde <strong>&lt;&gt; Code</strong>, pestaña <strong>HTTPS</strong>, y copia la dirección. Se ve así:</p>
+        <div class="code"><div class="code-bar"><span>URL de ejemplo</span><button class="copy">Copiar</button></div><pre><code>https://github.com/usuario/nombre-del-repo.git</code></pre></div>
+
+        <div class="tabs" data-tabs>
+          <div class="tablist" role="tablist" aria-label="Forma de clonar">
+            <button role="tab" id="tab-cl-ui" aria-controls="p-cl-ui" aria-selected="true">Con botones de VS Code</button>
+            <button role="tab" id="tab-cl-t" aria-controls="p-cl-t" aria-selected="false" tabindex="-1">Con la terminal</button>
+          </div>
+          <div class="tabpanel" role="tabpanel" id="p-cl-ui" aria-labelledby="tab-cl-ui">
+            <ol class="sub">
+              <li><span>Abre VS Code sin ninguna carpeta (<em>Archivo → Cerrar carpeta</em>).</span></li>
+              <li><span>Pulsa <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> y escribe <strong>Git: Clone</strong>.</span></li>
+              <li><span>Pega la URL (o elige <strong>Clonar desde GitHub</strong> para ver tu lista de repositorios).</span></li>
+              <li><span>Elige la carpeta donde se guardará, por ejemplo <code>Documentos/proyectos</code>.</span></li>
+              <li><span>Cuando termine, pulsa <strong>Abrir</strong>. Ya estás dentro del proyecto.</span></li>
+            </ol>
+          </div>
+          <div class="tabpanel" role="tabpanel" id="p-cl-t" aria-labelledby="tab-cl-t" hidden>
+            <div class="code"><div class="code-bar"><span>terminal</span><button class="copy">Copiar</button></div><pre><code><span class="c"># 1. Ve a la carpeta donde guardas tus proyectos</span>
+cd Documents
+<span class="c"># 2. Clona el repositorio</span>
+git clone https://github.com/usuario/nombre-del-repo.git
+<span class="c"># 3. Entra a la carpeta y ábrela en VS Code</span>
+cd nombre-del-repo
+code .</code></pre></div>
+            <p><code>code .</code> abre VS Code en la carpeta actual (el punto significa "aquí").</p>
+          </div>
+        </div>
+        <div class="note warn"><b class="tag">Cuidado</b><span>No clones un repositorio <em>dentro</em> de otro repositorio. Guarda cada proyecto en su propia carpeta, dentro de una carpeta general como <code>proyectos</code>.</span></div>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-clonar"> Cloné un repositorio</label>
+    </section>
+
+    <!-- 8 -->
+    <section class="step" id="commit" data-title="Guardar cambios: add y commit">
+      <div class="node">8</div>
+      <div class="step-head"><span class="hash">git add · git commit</span></div>
+      <h2>Guardar cambios: status, add y commit</h2>
+      <p class="intro">Este es el ciclo que repetirás cientos de veces: cambiar archivos, revisar, preparar y confirmar.</p>
+      <div class="body">
+        <div class="tabs" data-tabs>
+          <div class="tablist" role="tablist" aria-label="Forma de hacer commit">
+            <button role="tab" id="tab-cm-t" aria-controls="p-cm-t" aria-selected="true">Con la terminal</button>
+            <button role="tab" id="tab-cm-ui" aria-controls="p-cm-ui" aria-selected="false" tabindex="-1">Con botones de VS Code</button>
+          </div>
+          <div class="tabpanel" role="tabpanel" id="p-cm-t" aria-labelledby="tab-cm-t">
+            <div class="code"><div class="code-bar"><span>terminal</span><button class="copy">Copiar</button></div><pre><code><span class="c"># ¿Qué cambió? (úsalo todo el tiempo)</span>
+git status
+
+<span class="c"># Ver exactamente qué líneas cambiaron</span>
+git diff
+
+<span class="c"># Preparar un archivo concreto…</span>
+git add index.html
+<span class="c"># …o todos los cambios de la carpeta</span>
+git add .
+
+<span class="c"># Confirmar con un mensaje que explique el cambio</span>
+git commit -m <span class="s">"Agrega formulario de contacto"</span></code></pre></div>
+          </div>
+          <div class="tabpanel" role="tabpanel" id="p-cm-ui" aria-labelledby="tab-cm-ui" hidden>
+            <ol class="sub">
+              <li><span>Abre el panel <strong>Control de código fuente</strong> (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd>). Verás la lista de archivos modificados con letras: <strong>M</strong> = modificado, <strong>U</strong> = nuevo (sin seguimiento), <strong>D</strong> = eliminado.</span></li>
+              <li><span>Haz clic en un archivo para ver el antes y el después lado a lado.</span></li>
+              <li><span>Pulsa el <strong>+</strong> junto a cada archivo (o junto a "Cambios" para todos). Pasan a <strong>Cambios almacenados provisionalmente</strong> (staging).</span></li>
+              <li><span>Escribe el mensaje en el cuadro de texto de arriba.</span></li>
+              <li><span>Pulsa <strong>✓ Confirmar</strong> (Commit) o <kbd>Ctrl</kbd>+<kbd>Enter</kbd>.</span></li>
+            </ol>
+          </div>
+        </div>
+
+        <h3>Cómo escribir un buen mensaje de commit</h3>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Evita</th><th>Mejor</th></tr></thead>
+            <tbody>
+              <tr><td><code>cambios</code></td><td><code>Corrige el cálculo del promedio en notas.py</code></td></tr>
+              <tr><td><code>asdf</code></td><td><code>Agrega estilos al menú de navegación</code></td></tr>
+              <tr><td><code>ya quedó final final</code></td><td><code>Elimina archivos de prueba que no se usan</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul>
+          <li>Empieza con un verbo en presente: <em>Agrega, Corrige, Elimina, Actualiza, Mejora</em>.</li>
+          <li>Un commit = un cambio con sentido. Es mejor hacer varios commits pequeños que uno gigante al final del día.</li>
+        </ul>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-commit"> Hice mi primer commit</label>
+    </section>
+
+    <!-- 9 -->
+    <section class="step" id="push-pull" data-title="Subir y bajar: push y pull">
+      <div class="node">9</div>
+      <div class="step-head"><span class="hash">git push · git pull</span></div>
+      <h2>Subir y bajar cambios: push y pull</h2>
+      <p class="intro">Tus commits ya están guardados en tu PC. Ahora hay que sincronizarlos con GitHub.</p>
+      <div class="body">
+        <div class="code"><div class="code-bar"><span>terminal</span><button class="copy">Copiar</button></div><pre><code><span class="c"># Traer los cambios nuevos de GitHub (hazlo antes de empezar a trabajar)</span>
+git pull
+
+<span class="c"># Subir tus commits a GitHub</span>
+git push</code></pre></div>
+        <p>En VS Code, el botón azul <strong>Sincronizar cambios</strong> del panel de Git (o las flechas ↓↑ en la barra inferior) hace <code>pull</code> y después <code>push</code> de una vez. El número junto a las flechas indica cuántos commits faltan por bajar (↓) o subir (↑).</p>
+        <div class="note tip"><b class="tag">Hábito de oro</b><span><strong>pull</strong> al empezar, <strong>commit</strong> seguido mientras trabajas, <strong>push</strong> al terminar. Si trabajas en equipo, este hábito evita la mayoría de los conflictos.</span></div>
+        <p>Después del <code>push</code>, actualiza la página del repositorio en GitHub: verás tu mensaje de commit junto a los archivos que cambiaste.</p>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-push-pull"> Subí mis cambios a GitHub</label>
+    </section>
+
+    <!-- 10 -->
+    <section class="step" id="nuevo-repo" data-title="Crear tu propio repositorio">
+      <div class="node">10</div>
+      <div class="step-head"><span class="hash">git init · git remote</span></div>
+      <h2>Crear y publicar tu propio repositorio</h2>
+      <p class="intro">¿Tienes una carpeta con un proyecto en tu PC que aún no está en GitHub? Hay dos caminos.</p>
+      <div class="body">
+        <div class="tabs" data-tabs>
+          <div class="tablist" role="tablist" aria-label="Forma de publicar">
+            <button role="tab" id="tab-nr-ui" aria-controls="p-nr-ui" aria-selected="true">Publicar desde VS Code</button>
+            <button role="tab" id="tab-nr-t" aria-controls="p-nr-t" aria-selected="false" tabindex="-1">Con la terminal</button>
+          </div>
+          <div class="tabpanel" role="tabpanel" id="p-nr-ui" aria-labelledby="tab-nr-ui">
+            <ol class="sub">
+              <li><span>Abre la carpeta del proyecto en VS Code (<em>Archivo → Abrir carpeta</em>).</span></li>
+              <li><span>Ve al panel de Git (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd>) y pulsa <strong>Publicar en GitHub</strong>.</span></li>
+              <li><span>Elige <strong>repositorio público</strong> (visible para todos, ideal para portafolio) o <strong>privado</strong>.</span></li>
+              <li><span>Selecciona qué archivos incluir y confirma. VS Code crea el repositorio en GitHub, hace el primer commit y lo sube.</span></li>
+            </ol>
+          </div>
+          <div class="tabpanel" role="tabpanel" id="p-nr-t" aria-labelledby="tab-nr-t" hidden>
+            <p>Primero crea un repositorio <strong>vacío</strong> en GitHub: botón <strong>+</strong> (arriba a la derecha) → <strong>New repository</strong> → ponle nombre → <strong>no</strong> marques "Add a README" → <strong>Create repository</strong>. Luego, dentro de tu carpeta:</p>
+            <div class="code"><div class="code-bar"><span>terminal</span><button class="copy">Copiar</button></div><pre><code>git init
+git add .
+git commit -m <span class="s">"Primer commit"</span>
+git branch -M main
+git remote add origin https://github.com/tu-usuario/mi-proyecto.git
+git push -u origin main</code></pre></div>
+            <ul>
+              <li><code>git init</code> convierte la carpeta en repositorio (crea una carpeta oculta <code>.git</code>).</li>
+              <li><code>git remote add origin …</code> le dice a Git dónde está tu repositorio en GitHub. "origin" es el apodo de esa dirección.</li>
+              <li><code>-u</code> recuerda la conexión: desde ahora basta con <code>git push</code>.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="note info"><b class="tag">README</b><span>Agrega un archivo <code>README.md</code> que explique qué hace tu proyecto y cómo ejecutarlo. Es lo primero que ve quien visita tu repositorio.</span></div>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-nuevo-repo"> Publiqué un repositorio propio</label>
+    </section>
+
+    <!-- 11 -->
+    <section class="step" id="gitignore" data-title="Ignorar archivos (.gitignore)">
+      <div class="node">11</div>
+      <div class="step-head"><span class="hash">.gitignore</span></div>
+      <h2>Ignorar archivos con .gitignore</h2>
+      <p class="intro">Hay archivos que nunca deben subirse: contraseñas, dependencias descargadas o archivos que genera tu computadora.</p>
+      <div class="body">
+        <p>Crea en la raíz del proyecto un archivo llamado exactamente <code>.gitignore</code> y escribe un patrón por línea:</p>
+        <div class="code"><div class="code-bar"><span>.gitignore</span><button class="copy">Copiar</button></div><pre><code><span class="c"># Dependencias</span>
+node_modules/
+venv/
+__pycache__/
+
+<span class="c"># Secretos y configuración local</span>
+.env
+
+<span class="c"># Archivos del sistema</span>
+.DS_Store
+Thumbs.db
+
+<span class="c"># Resultados de compilación</span>
+dist/
+*.log</code></pre></div>
+        <div class="note warn"><b class="tag">Importante</b><span>Si subiste por error una contraseña o clave, cambiarla es obligatorio: borrar el archivo después no la quita del historial.</span></div>
+        <p>GitHub tiene plantillas listas por lenguaje en <a href="https://github.com/github/gitignore" target="_blank" rel="noopener">github.com/github/gitignore</a>.</p>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-gitignore"> Creé mi .gitignore</label>
+    </section>
+
+    <!-- 12 -->
+    <section class="step" id="ramas" data-title="Trabajar con ramas">
+      <div class="node">12</div>
+      <div class="step-head"><span class="hash">git switch · git merge</span></div>
+      <h2>Trabajar con ramas</h2>
+      <p class="intro">Una rama es una línea de trabajo paralela. Te permite probar algo nuevo sin romper la versión que ya funciona en <code>main</code>.</p>
+      <div class="body">
+        <figure>
+          <div class="svgwrap">
+          <svg viewBox="0 0 700 170" width="100%" style="min-width:520px" role="img" aria-label="Diagrama de ramas: main con commits, una rama menu-nuevo que se separa y luego se une con merge">
+            <line x1="40" y1="110" x2="660" y2="110" stroke="var(--accent)" stroke-width="3"/>
+            <path d="M200 110 C240 110 240 50 280 50 L460 50 C500 50 500 110 540 110" fill="none" stroke="var(--branch)" stroke-width="3"/>
+            <g fill="var(--surface)" stroke="var(--accent)" stroke-width="3">
+              <circle cx="80" cy="110" r="10"/><circle cx="200" cy="110" r="10"/><circle cx="380" cy="110" r="10"/><circle cx="620" cy="110" r="10"/>
+            </g>
+            <circle cx="540" cy="110" r="12" fill="var(--accent)" stroke="var(--accent)" stroke-width="3"/>
+            <g fill="var(--surface)" stroke="var(--branch)" stroke-width="3">
+              <circle cx="310" cy="50" r="10"/><circle cx="430" cy="50" r="10"/>
+            </g>
+            <text x="40" y="145" font-size="14" font-weight="700" fill="var(--accent)" font-family="JetBrains Mono, monospace">main</text>
+            <text x="300" y="25" font-size="14" font-weight="700" fill="var(--branch)" font-family="JetBrains Mono, monospace">menu-nuevo</text>
+            <text x="200" y="145" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">git switch -c</text>
+            <text x="540" y="145" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">git merge</text>
+          </svg>
+          </div>
+          <figcaption>Creas la rama <code>menu-nuevo</code>, haces commits en ella, y cuando todo funciona la unes (merge) de vuelta a <code>main</code>.</figcaption>
+        </figure>
+        <div class="code"><div class="code-bar"><span>terminal</span><button class="copy">Copiar</button></div><pre><code><span class="c"># Ver ramas (la actual tiene un *)</span>
+git branch
+
+<span class="c"># Crear una rama nueva y cambiarte a ella</span>
+git switch -c menu-nuevo
+
+<span class="c"># …trabajas y haces commits como siempre…</span>
+
+<span class="c"># Subir la rama a GitHub la primera vez</span>
+git push -u origin menu-nuevo
+
+<span class="c"># Volver a main y unir los cambios de la rama</span>
+git switch main
+git merge menu-nuevo
+
+<span class="c"># Borrar la rama cuando ya no la necesites</span>
+git branch -d menu-nuevo</code></pre></div>
+        <p>En VS Code, el nombre de la rama actual aparece en la <strong>esquina inferior izquierda</strong>. Haz clic ahí para cambiar de rama o crear una nueva.</p>
+        <div class="note info"><b class="tag">¿checkout?</b><span>En tutoriales antiguos verás <code>git checkout -b rama</code>. Hace lo mismo que <code>git switch -c rama</code>; <code>switch</code> es más nuevo y más fácil de recordar.</span></div>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-ramas"> Creé y uní una rama</label>
+    </section>
+
+    <!-- 13 -->
+    <section class="step" id="equipo" data-title="Trabajo en equipo: PR y forks">
+      <div class="node">13</div>
+      <div class="step-head"><span class="hash">Pull request · fork</span></div>
+      <h2>Trabajo en equipo: pull requests y forks</h2>
+      <p class="intro">En proyectos reales nadie sube directo a <code>main</code>: se propone el cambio y otra persona lo revisa.</p>
+      <div class="body">
+        <h3>Si eres colaborador del repositorio</h3>
+        <ol class="sub">
+          <li><span>El dueño te agrega en <em>Settings → Collaborators</em> y aceptas la invitación que llega a tu correo.</span></li>
+          <li><span>Creas una rama, haces commits y la subes con <code>git push -u origin mi-rama</code>.</span></li>
+          <li><span>En GitHub aparece el botón <strong>Compare &amp; pull request</strong>. Describe qué hiciste y pulsa <strong>Create pull request</strong>.</span></li>
+          <li><span>Tus compañeros revisan, comentan y, cuando está aprobado, alguien pulsa <strong>Merge pull request</strong>.</span></li>
+          <li><span>En tu PC vuelves a <code>main</code> y haces <code>git pull</code> para tener la versión actualizada.</span></li>
+        </ol>
+        <h3>Si no tienes permiso (proyecto ajeno)</h3>
+        <p>Pulsa <strong>Fork</strong> en la página del repositorio. GitHub crea una copia en tu cuenta; clonas <em>tu copia</em>, haces tus cambios y abres un pull request hacia el repositorio original.</p>
+        <div class="note tip"><b class="tag">Extensión útil</b><span>Instala <strong>GitHub Pull Requests</strong> en VS Code para crear, revisar y comentar pull requests sin salir del editor.</span></div>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-equipo"> Entendí pull requests y forks</label>
+    </section>
+
+    <!-- 14 -->
+    <section class="step" id="deshacer" data-title="Deshacer y solucionar errores">
+      <div class="node">14</div>
+      <div class="step-head"><span class="hash">Rescate</span></div>
+      <h2>Deshacer cosas y solucionar errores comunes</h2>
+      <p class="intro">Equivocarse es normal. Git casi siempre tiene una forma de volver atrás.</p>
+      <div class="body">
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Quiero…</th><th>Comando</th></tr></thead>
+            <tbody>
+              <tr><td>Descartar los cambios de un archivo (sin commit todavía)</td><td><code>git restore archivo.txt</code></td></tr>
+              <tr><td>Sacar un archivo del staging (deshacer el <code>add</code>)</td><td><code>git restore --staged archivo.txt</code></td></tr>
+              <tr><td>Corregir el mensaje del último commit (si aún no hiciste push)</td><td><code>git commit --amend -m "Mensaje nuevo"</code></td></tr>
+              <tr><td>Deshacer el último commit pero conservar los cambios</td><td><code>git reset --soft HEAD~1</code></td></tr>
+              <tr><td>Revertir un commit que ya está en GitHub</td><td><code>git revert &lt;hash&gt;</code></td></tr>
+              <tr><td>Ver el historial en una línea por commit</td><td><code>git log --oneline --graph</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note warn"><b class="tag">Regla</b><span>Si el commit ya está en GitHub y otros lo descargaron, usa <code>git revert</code> (crea un commit nuevo que deshace el anterior). No reescribas historia compartida.</span></div>
+
+        <h3>Mensajes de error frecuentes</h3>
+        <details class="err">
+          <summary><code>Author identity unknown · Please tell me who you are</code></summary>
+          <div class="inner"><p>No configuraste tu nombre y correo. Vuelve al <a href="#configurar">paso 5</a> y ejecuta los dos comandos <code>git config --global</code>.</p></div>
+        </details>
+        <details class="err">
+          <summary><code>fatal: not a git repository</code></summary>
+          <div class="inner"><p>Estás en una carpeta que no es un repositorio. Revisa dónde estás con <code>pwd</code> y entra a la carpeta correcta con <code>cd nombre-del-repo</code>, o créalo con <code>git init</code>.</p></div>
+        </details>
+        <details class="err">
+          <summary><code>! [rejected] main -&gt; main (fetch first)</code></summary>
+          <div class="inner">
+            <p>GitHub tiene commits que tú no tienes (alguien más subió cambios, o editaste algo desde la web). Tráelos primero y vuelve a subir:</p>
+            <div class="code"><div class="code-bar"><span>terminal</span><button class="copy">Copiar</button></div><pre><code>git pull
+git push</code></pre></div>
+          </div>
+        </details>
+        <details class="err">
+          <summary><code>CONFLICT (content): Merge conflict in archivo</code></summary>
+          <div class="inner">
+            <p>Tú y otra persona cambiaron las mismas líneas. VS Code marca el conflicto así:</p>
+            <div class="code"><div class="code-bar"><span>archivo con conflicto</span><button class="copy">Copiar</button></div><pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+&lt;h1&gt;Bienvenidos&lt;/h1&gt;       <span class="c">← tu versión</span>
+=======
+&lt;h1&gt;Hola a todos&lt;/h1&gt;      <span class="c">← la otra versión</span>
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; main</code></pre></div>
+            <ol class="sub">
+              <li><span>Sobre el conflicto aparecen opciones: <strong>Aceptar cambio actual</strong>, <strong>Aceptar cambio entrante</strong> o <strong>Aceptar ambos</strong>. También puedes editarlo a mano y borrar las marcas.</span></li>
+              <li><span>Guarda el archivo, haz <code>git add archivo</code> y luego <code>git commit</code>.</span></li>
+            </ol>
+          </div>
+        </details>
+        <details class="err">
+          <summary><code>remote: Permission denied · 403</code></summary>
+          <div class="inner"><p>Estás autenticado con otra cuenta, o no eres colaborador del repositorio. Revisa la cuenta en el ícono de Cuentas de VS Code. En Windows, abre <em>Administrador de credenciales → Credenciales de Windows</em>, elimina la de <code>git:https://github.com</code> y vuelve a hacer <code>push</code> para iniciar sesión de nuevo.</p></div>
+        </details>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-deshacer"> Sé cómo recuperarme de errores</label>
+    </section>
+
+    <!-- 15 -->
+    <section class="step" id="chuleta" data-title="Chuleta y práctica final">
+      <div class="node">15</div>
+      <div class="step-head"><span class="hash">Resumen</span></div>
+      <h2>Chuleta de comandos y práctica final</h2>
+      <p class="intro">Guarda esta tabla. Con estos comandos cubres el 90% del trabajo diario.</p>
+      <div class="body">
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Comando</th><th>Qué hace</th></tr></thead>
+            <tbody>
+              <tr class="group"><td colspan="2">Configurar</td></tr>
+              <tr><td><code>git config --global user.name "…"</code></td><td>Define tu nombre para los commits</td></tr>
+              <tr><td><code>git config --global user.email "…"</code></td><td>Define tu correo (el de GitHub)</td></tr>
+              <tr class="group"><td colspan="2">Empezar</td></tr>
+              <tr><td><code>git clone &lt;url&gt;</code></td><td>Descarga un repositorio de GitHub</td></tr>
+              <tr><td><code>git init</code></td><td>Convierte la carpeta actual en repositorio</td></tr>
+              <tr class="group"><td colspan="2">Día a día</td></tr>
+              <tr><td><code>git status</code></td><td>Muestra qué cambió y qué está preparado</td></tr>
+              <tr><td><code>git diff</code></td><td>Muestra las líneas exactas que cambiaron</td></tr>
+              <tr><td><code>git add .</code></td><td>Prepara todos los cambios para el commit</td></tr>
+              <tr><td><code>git commit -m "…"</code></td><td>Guarda una foto de los cambios con un mensaje</td></tr>
+              <tr><td><code>git log --oneline</code></td><td>Muestra el historial resumido</td></tr>
+              <tr class="group"><td colspan="2">Sincronizar con GitHub</td></tr>
+              <tr><td><code>git pull</code></td><td>Trae y aplica los cambios de GitHub</td></tr>
+              <tr><td><code>git push</code></td><td>Sube tus commits a GitHub</td></tr>
+              <tr><td><code>git remote -v</code></td><td>Muestra a qué repositorio remoto estás conectado</td></tr>
+              <tr class="group"><td colspan="2">Ramas</td></tr>
+              <tr><td><code>git branch</code></td><td>Lista las ramas</td></tr>
+              <tr><td><code>git switch -c &lt;rama&gt;</code></td><td>Crea una rama y te cambia a ella</td></tr>
+              <tr><td><code>git switch &lt;rama&gt;</code></td><td>Cambia a una rama existente</td></tr>
+              <tr><td><code>git merge &lt;rama&gt;</code></td><td>Une esa rama con la rama actual</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Vocabulario rápido</h3>
+        <dl class="gloss">
+          <div><dt>repositorio (repo)</dt><dd>Carpeta de proyecto con historial de Git.</dd></div>
+          <div><dt>commit</dt><dd>Punto guardado del proyecto, con autor, fecha y mensaje.</dd></div>
+          <div><dt>staging</dt><dd>Zona donde eliges qué cambios entran al próximo commit.</dd></div>
+          <div><dt>remote / origin</dt><dd>La copia del repositorio en GitHub y su apodo.</dd></div>
+          <div><dt>rama (branch)</dt><dd>Línea de trabajo paralela; la principal es <code>main</code>.</dd></div>
+          <div><dt>merge</dt><dd>Unir el trabajo de una rama con otra.</dd></div>
+          <div><dt>pull request</dt><dd>Propuesta en GitHub para unir tu rama, con revisión.</dd></div>
+          <div><dt>fork</dt><dd>Copia de un repositorio ajeno dentro de tu cuenta.</dd></div>
+          <div><dt>HEAD</dt><dd>El commit en el que estás parado ahora mismo.</dd></div>
+        </dl>
+
+        <div class="mission">
+          <h3>Práctica final: tu primer repositorio completo</h3>
+          <p>Hazlo de principio a fin sin mirar arriba. Si te atoras, vuelve al paso indicado.</p>
+          <ol>
+            <li>Crea una carpeta <code>mi-primer-repo</code> con un archivo <code>README.md</code> que diga tu nombre. <a href="#nuevo-repo">(paso 10)</a></li>
+            <li>Publícala en GitHub como repositorio público. <a href="#nuevo-repo">(paso 10)</a></li>
+            <li>Agrega un archivo <code>index.html</code> y haz commit con un buen mensaje. <a href="#commit">(paso 8)</a></li>
+            <li>Súbelo con push y compruébalo en la web. <a href="#push-pull">(paso 9)</a></li>
+            <li>Crea la rama <code>estilos</code>, agrega un <code>style.css</code>, haz commit y súbela. <a href="#ramas">(paso 12)</a></li>
+            <li>Abre un pull request de <code>estilos</code> hacia <code>main</code> y únelo. <a href="#equipo">(paso 13)</a></li>
+            <li>Vuelve a <code>main</code> en tu PC y haz <code>git pull</code>. Revisa el historial con <code>git log --oneline --graph</code>.</li>
+          </ol>
+        </div>
+      </div>
+      <label class="done-toggle"><input type="checkbox" id="done-chuleta"> Completé la práctica final</label>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <span>Tu avance se guarda solo en este navegador.</span>
+  <button class="reset" type="button" id="reset-progress">Reiniciar avance</button>
+</footer>
+
+<script>
+(function(){
+  var KEY = 'ruta-git-progreso-v1';
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e) { state = {}; }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} }
+
+  // Índice
+  document.querySelectorAll('.js-toc').forEach(function(ol){
+    steps.forEach(function(s){
+      var li = document.createElement('li');
+      var a = document.createElement('a');
+      a.href = '#' + s.id; a.textContent = s.dataset.title; a.dataset.step = s.id;
+      li.appendChild(a); ol.appendChild(li);
+    });
+  });
+  document.querySelectorAll('.js-total').forEach(function(el){ el.textContent = steps.length; });
+
+  function render(){
+    var n = 0;
+    steps.forEach(function(s){
+      var on = !!state[s.id];
+      if (on) n++;
+      s.classList.toggle('is-done', on);
+      var cb = s.querySelector('.done-toggle input'); if (cb) cb.checked = on;
+      document.querySelectorAll('a[data-step="'+s.id+'"]').forEach(function(a){ a.classList.toggle('done', on); });
+    });
+    document.querySelectorAll('.js-count').forEach(function(el){ el.textContent = n; });
+    document.querySelectorAll('.js-bar').forEach(function(el){ el.style.width = (n/steps.length*100) + '%'; });
+  }
+  steps.forEach(function(s){
+    var cb = s.querySelector('.done-toggle input');
+    if (cb) cb.addEventListener('change', function(){ state[s.id] = cb.checked; save(); render(); });
+  });
+  document.getElementById('reset-progress').addEventListener('click', function(){ state = {}; save(); render(); });
+  render();
+
+  // Sección activa en el índice
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){
+          document.querySelectorAll('.toc a').forEach(function(a){ a.classList.toggle('active', a.dataset.step === e.target.id); });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    steps.forEach(function(s){ io.observe(s); });
+  }
+
+  // Pestañas
+  document.querySelectorAll('[data-tabs]').forEach(function(box){
+    var tabs = Array.prototype.slice.call(box.querySelectorAll('[role="tab"]'));
+    function select(t){
+      tabs.forEach(function(x){
+        var on = x === t;
+        x.setAttribute('aria-selected', on ? 'true' : 'false');
+        x.tabIndex = on ? 0 : -1;
+        document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
+      });
+    }
+    tabs.forEach(function(t, i){
+      t.addEventListener('click', function(){ select(t); });
+      t.addEventListener('keydown', function(e){
+        var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (d){ var nt = tabs[(i + d + tabs.length) % tabs.length]; select(nt); nt.focus(); }
+      });
+    });
+  });
+  // Pestaña de sistema operativo según el equipo del estudiante
+  var ua = navigator.userAgent || '';
+  var os = /Mac/.test(ua) && !/iPhone|iPad/.test(ua) ? 'tab-mac' : (/Linux/.test(ua) && !/Android/.test(ua) ? 'tab-lin' : null);
+  if (os) document.getElementById(os).click();
+
+  // Copiar
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var pre = btn.closest('.code').querySelector('pre');
+      var text = pre.innerText.replace(/\s+←[^\n]*/g, '');
+      function ok(){ btn.textContent = 'Copiado'; setTimeout(function(){ btn.textContent = 'Copiar'; }, 1600); }
+      function fallback(){
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        btn.textContent = 'Seleccionado: Ctrl+C';
+        setTimeout(function(){ btn.textContent = 'Copiar'; }, 2200);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(ok, fallback);
+      } else { fallback(); }
+    });
+  });
+})();
+</script>
